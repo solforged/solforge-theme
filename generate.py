@@ -9,6 +9,7 @@ site's sheet-on-desk layout. Requires rsvg-convert and ImageMagick.
 
 from __future__ import annotations
 
+import json
 import math
 import shutil
 import subprocess
@@ -68,6 +69,17 @@ THEMES = {
             "bright_blue": "#aab8de",
             "bright_magenta": "#dfa7b6",
         },
+        # omp and Tern surfaces; Tern draws its tab bar in `chrome`, the oxblood desk.
+        "ui": {
+            "bg": "#130807", "bg_alt": "#190d0a", "bg_hl": "#211411",
+            "border": "#694135", "border_muted": "#36231c",
+            "comment": "#a58876", "gray": "#c2ab98", "fg": "#ece1ce", "fg_bright": "#faf3e4",
+            "gilt": "#dfb15a", "rubric": "#de8a70", "red": "#d9654f", "orange": "#d98c4a",
+            "green": "#94ad7f", "cyan": "#6fa9a3", "blue": "#8798c7", "madder": "#c98597",
+            "sel": "#4d1c15", "diff_add": "#1b2414", "diff_delete": "#33100b",
+            "chrome": "#290401", "widget": "#211411",
+            "ansi0": "#4a2e25", "ansi7": "#c2ab98", "ansi15": "#faf3e4",
+        },
     },
     "light": {
         "name": "Solforge Light",
@@ -114,8 +126,45 @@ THEMES = {
             "bright_blue": "#4a66a3",
             "bright_magenta": "#a3507a",
         },
+        "ui": {
+            "bg": "#f6f1e6", "bg_alt": "#eee7da", "bg_hl": "#e8dfd0",
+            "border": "#a39380", "border_muted": "#d9cebb",
+            "comment": "#70605a", "gray": "#65534a", "fg": "#2a2120", "fg_bright": "#1a1312",
+            "gilt": "#765411", "rubric": "#863f3d", "red": "#a3302a", "orange": "#a5531c",
+            "green": "#4f6b3a", "cyan": "#2f6e6a", "blue": "#334f8a", "madder": "#8a3a63",
+            "sel": "#ebd3c8", "diff_add": "#e2e8d3", "diff_delete": "#f3dbd3",
+            "chrome": "#e8dfd0", "widget": "#fcfaf4",
+            "ansi0": "#2a2120", "ansi7": "#8a7a6d", "ansi15": "#c9bba6",
+        },
     },
 }
+
+# omp color roles, as names of `ui` vars. Tern reads the same file.
+OMP_ROLES = {
+    "accent": "gilt", "border": "border", "borderAccent": "gilt", "borderMuted": "border_muted",
+    "success": "green", "error": "red", "warning": "orange", "muted": "gray", "dim": "comment",
+    "text": "fg", "thinkingText": "gray",
+    "selectedBg": "sel", "userMessageBg": "bg_hl", "userMessageText": "fg_bright",
+    "customMessageBg": "bg_alt", "customMessageText": "gray", "customMessageLabel": "rubric",
+    "toolPendingBg": "bg_alt", "toolSuccessBg": "diff_add", "toolErrorBg": "diff_delete",
+    "statusLineBg": "bg", "toolTitle": "fg_bright", "toolOutput": "gray",
+    "mdHeading": "gilt", "mdLink": "gilt", "mdLinkUrl": "comment", "mdCode": "rubric",
+    "mdCodeBlock": "fg", "mdCodeBlockBorder": "border", "mdQuote": "gray", "mdQuoteBorder": "rubric",
+    "mdHr": "border", "mdListBullet": "rubric",
+    "toolDiffAdded": "green", "toolDiffRemoved": "red", "toolDiffContext": "gray",
+    "syntaxComment": "comment", "syntaxKeyword": "madder", "syntaxFunction": "blue",
+    "syntaxVariable": "fg", "syntaxString": "green", "syntaxNumber": "orange", "syntaxType": "gilt",
+    "syntaxOperator": "gray", "syntaxPunctuation": "gray",
+    "thinkingOff": "border", "thinkingMinimal": "comment", "thinkingLow": "cyan",
+    "thinkingMedium": "blue", "thinkingHigh": "gilt", "thinkingXhigh": "rubric", "thinkingMax": "red",
+    "bashMode": "cyan", "pythonMode": "madder",
+    "statusLineSep": "border", "statusLineModel": "gilt", "statusLinePath": "blue",
+    "statusLineGitClean": "green", "statusLineGitDirty": "orange", "statusLineContext": "cyan",
+    "statusLineSpend": "blue", "statusLineStaged": "green", "statusLineDirty": "orange",
+    "statusLineUntracked": "rubric", "statusLineOutput": "fg_bright", "statusLineCost": "gilt",
+    "statusLineSubagents": "madder",
+}
+
 
 COLOR_ORDER = [
     "mode",
@@ -763,6 +812,32 @@ def write_colors(theme: dict, dest: Path) -> None:
     (dest / "chromium.theme").write_text(",".join(str(v) for v in rgb(c["background"])) + "\n")
 
 
+def omp_theme(variant: str, theme: dict) -> str:
+    """omp theme with a `terminal` section, which Tern uses for its panes and chrome."""
+    u, c = theme["ui"], theme["colors"]
+    ansi = [u["ansi0"], c["red"], c["green"], c["yellow"], c["blue"], c["magenta"], c["cyan"], u["ansi7"],
+            c["muted"], c["bright_red"], c["bright_green"], c["bright_yellow"], c["bright_blue"],
+            c["bright_magenta"], c["bright_cyan"], u["ansi15"]]
+    doc = {
+        "$schema": "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/modes/theme/theme-schema.json",
+        "name": f"solforge-{variant}",
+        "vars": u,
+        "colors": OMP_ROLES,
+        "export": {"pageBg": "bg", "cardBg": "bg_alt", "infoBg": "bg_hl"},
+        "terminal": {"background": "bg", "foreground": "fg", "chrome": "chrome", "widget": "widget", "ansi": ansi},
+    }
+    return json.dumps(doc, indent=2) + "\n"
+
+
+def omp_report(theme: dict) -> None:
+    """Lowest contrast of each text role over the surfaces omp draws it on."""
+    u = theme["ui"]
+    surfaces = ["bg", "bg_alt", "bg_hl", "sel", "diff_add", "diff_delete"]
+    texts = ["fg", "fg_bright", "gray", "comment", "gilt", "rubric", "red", "orange", "green", "cyan", "blue", "madder"]
+    low = sorted((contrast(u[t], u[s]), t, s) for t in texts for s in surfaces)[:3]
+    print("  omp lowest: " + ", ".join(f"{t} on {s} {r:.1f}" for r, t, s in low))
+
+
 def render(svg: str, png: Path, width: int | None = None) -> None:
     with tempfile.NamedTemporaryFile("w", suffix=".svg", delete=False) as tmp:
         tmp.write(svg)
@@ -797,6 +872,9 @@ def main() -> int:
         print(f"{theme['name']} -> {dest}")
         write_colors(theme, dest)
         report(theme)
+        (ROOT / "omp").mkdir(exist_ok=True)
+        (ROOT / "omp" / f"solforge-{variant}.json").write_text(omp_theme(variant, theme))
+        omp_report(theme)
         for slug, plate, title, draw in DRAWINGS:
             if only and slug not in only:
                 continue
@@ -810,7 +888,7 @@ def main() -> int:
             render(preview_overlay(theme), overlay)
             subprocess.run(
                 ["magick", str(bgdir / "01-orrery.png"), "-resize", "2560x1440", str(overlay),
-                 "-composite", str(dest / "preview.png")],
+                 "-composite", "-define", "png:exclude-chunks=date,time", str(dest / "preview.png")],
                 check=True,
             )
         print("  preview.png")
