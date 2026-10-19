@@ -34,6 +34,7 @@ rooms are true wireframes rather than flat outlines.
 
 | File | Main figure | Margin studies |
 | --- | --- | --- |
+| `00-fucina.png` | A star forge on the sun's axis: four vanes round a core sphere, a crown wheel and an escape wheel, and a coiled nozzle driving a solar lance into the pole of a half-built sun | The forge in plan, one vane in elevation |
 | `01-specchio.png` | A burning mirror on a worm-driven mount, gathering sunlight into a crucible over a brick forge | Parabola construction, anvil and hammer, gnomon, the sun's course over Florence |
 | `02-orologio.png` | A weight-driven clock train between two plates, with anchor escapement and pendulum | Meshing teeth enlarged, lantern pinion, verge and foliot |
 | `03-vacui.png` | The hollow rhombicuboctahedron from Pacioli's *De divina proportione* | Six hollow solids on rails, the golden spiral, the cube unfolded |
