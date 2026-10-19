@@ -195,26 +195,29 @@ LOGO_GLYPHS = {
     "O": [" ██████╗ ", "██╔═══██╗", "██║   ██║", "██║   ██║", "╚██████╔╝", " ╚═════╝ "],
 }
 
+# Every glyph here is plain one-cell text. Hermes measures emoji such as the
+# scales (U+2696) as two cells while Ghostty draws them in one, and that drift
+# leaves stale characters beside the prompt.
 TUNON = {
     "name": "tunon",
     "description": "Tunon the Adjudicator: the Face of Judgment in Solforge oxblood and gilt",
     "spinner": {
-        "waiting_faces": ["(⚖)", "(⊕)", "(◇)", "(✦)"],
-        "thinking_faces": ["(⚖)", "(⊕)", "(⌁)", "(◈)"],
+        "waiting_faces": ["(⊕)", "(◇)", "(✦)", "(◆)"],
+        "thinking_faces": ["(⊕)", "(⌁)", "(◈)", "(◇)"],
         "thinking_verbs": [
             "weighing testimony", "hearing all sides", "consulting Kyros' law", "citing the Edicts",
             "examining evidence", "deliberating", "drafting the verdict", "binding fate"],
-        "wings": [["⟪⚖", "⚖⟫"], ["⟪⊕", "⊕⟫"], ["⟪╸", "╺⟫"]],
+        "wings": [["⟪⊕", "⊕⟫"], ["⟪◇", "◇⟫"], ["⟪╸", "╺⟫"]],
     },
     "branding": {
         "agent_name": "Tunon",
         "welcome": "The court is in session. State your matter, or /help for commands.",
-        "goodbye": "The court is adjourned. ⚖",
-        "response_label": " ⚖ Tunon ",
-        # Hermes trims whitespace off the symbol and adds one space, which leaves
-        # the scales touching the input. A braille blank survives the trim.
-        "prompt_symbol": "⚖\u2800",
-        "help_header": "(⚖) Available Commands",
+        "goodbye": "The court is adjourned. ⊕",
+        "response_label": " ⊕ Tunon ",
+        # Hermes trims whitespace off the symbol and adds one space; a braille
+        # blank survives the trim and gives the sigil a second cell of room.
+        "prompt_symbol": "⊕\u2800",
+        "help_header": "(⊕) Available Commands",
     },
     "tool_prefix": "╎",
 }
