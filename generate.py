@@ -211,7 +211,9 @@ TUNON = {
         "welcome": "The court is in session. State your matter, or /help for commands.",
         "goodbye": "The court is adjourned. ⚖",
         "response_label": " ⚖ Tunon ",
-        "prompt_symbol": "⚖",
+        # Hermes trims whitespace off the symbol and adds one space, which leaves
+        # the scales touching the input. A braille blank survives the trim.
+        "prompt_symbol": "⚖\u2800",
         "help_header": "(⚖) Available Commands",
     },
     "tool_prefix": "╎",

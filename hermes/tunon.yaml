@@ -122,7 +122,7 @@ branding:
   welcome: "The court is in session. State your matter, or /help for commands."
   goodbye: "The court is adjourned. ⚖"
   response_label: " ⚖ Tunon "
-  prompt_symbol: "⚖"
+  prompt_symbol: "⚖⠀"
   help_header: "(⚖) Available Commands"
 
 tool_prefix: "╎"
