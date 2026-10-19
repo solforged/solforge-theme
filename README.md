@@ -27,11 +27,17 @@ clears 4:1. `generate.py` prints the contrast table on each run.
 
 ## Backgrounds
 
-| File | Drawing |
-| --- | --- |
-| `01-orrery.png` | A 76-tooth wheel driving a 28 and 18 tooth train, with compass orbits |
-| `02-vacuus.png` | The hollow rhombicuboctahedron Leonardo drew for Pacioli's *De divina proportione* |
-| `03-oculus.png` | A section of the eye with a candle's rays inverting on the retina, and the iris as an escape wheel |
+Each background is a notebook page: one main figure, smaller studies in the
+margins, Italian labels on leaders, and mirrored notes. `drawings.py` draws
+them; the 3D figures use a small orthographic camera, so the wheels, solids and
+rooms are true wireframes rather than flat outlines.
+
+| File | Main figure | Margin studies |
+| --- | --- | --- |
+| `01-specchio.png` | A burning mirror on a worm-driven mount, gathering sunlight into a crucible over a brick forge | Parabola construction, anvil and hammer, gnomon, the sun's course over Florence |
+| `02-orologio.png` | A weight-driven clock train between two plates, with anchor escapement and pendulum | Meshing teeth enlarged, lantern pinion, verge and foliot |
+| `03-vacui.png` | The hollow rhombicuboctahedron from Pacioli's *De divina proportione* | Six hollow solids on rails, the golden spiral, the cube unfolded |
+| `04-oculus.png` | The eye in section, a candle's rays inverting on the retina | Camera obscura, the visual pyramid, the iris as an escape wheel |
 
 The mirrored notes are Leonardo's own lines, written right to left as he wrote
 them.
@@ -39,7 +45,8 @@ them.
 ## Regenerate
 
 `colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds, `preview.png`
-and the omp themes in `omp/` are all generated. Edit `generate.py`, then run:
+and the omp themes in `omp/` are all generated. Edit `generate.py` (palettes)
+or `drawings.py` (backgrounds), then run:
 
 ```sh
 ./generate.py
