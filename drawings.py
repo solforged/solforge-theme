@@ -1297,8 +1297,10 @@ def wire_sphere(s: Sheet, cam, c, r, lats, lons, role="gilt", width=1.0, far=Non
 
 def plate_fucina(s: Sheet):
     """A star forge of vanes and wheels, driving a solar lance into the sun it is building."""
-    R = 1700
-    cam = Cam(1920, 3040, 1.0, yaw=0, pitch=16)
+    # World units are the forge's; K zooms the whole scene, and the sun's cap fills the bottom third.
+    R, K = 1700, 0.88
+    Rs = R * K
+    cam = Cam(1920, 1400 + Rs, K, yaw=0, pitch=16)
     sx, sy = cam((0, 0, 0))
 
     def outside(p):
@@ -1313,39 +1315,48 @@ def plate_fucina(s: Sheet):
         return lambda p: cam.rot((p[0], 0, p[2]))[2] >= 0
 
     # The sun, clipped to the sheet: growth shells, a toothed ring at its limb, corona ticks.
+    # Rings above the pole leave a gap so the lance reads clearly.
+    def ring_gap(r, role, width, dash, op):
+        g = math.degrees(80 / r)
+        a0, a1 = math.radians(270 + g), math.radians(270 - g)
+        s.path(f"M{pt(sx + r * math.cos(a0), sy + r * math.sin(a0))} A{f(r)},{f(r)} 0 1 1 "
+               f"{pt(sx + r * math.cos(a1), sy + r * math.sin(a1))}", role, width, dash, op)
+
     i = s.inset
     cid = s.clip(f'<rect x="{i}" y="{i}" width="{W - 2 * i}" height="{H - 2 * i}"/>')
     s.add(f'<g clip-path="url(#{cid})">')
     for dr, op in ((360, 0.3), (260, 0.45)):
-        s.circle(sx, sy, R + dr, "line", 1.0, "4 12", op)
-    s.path(gear_path(sx, sy, 480, 7.5, 0.0)[0], "gilt", 1.0, None, 0.75)
-    s.circle(sx, sy, R + 52, "line", 0.9, "6 8")
+        ring_gap(Rs + dr, "line", 1.0, "4 12", op)
+    s.path(gear_path(sx, sy, 480, 2 * (Rs + 100) / 480, 0.0)[0], "gilt", 1.0, None, 0.75)
+    ring_gap(Rs + 52, "line", 0.9, "6 8", 1.0)
     for k in range(360):
+        if abs(k - 270) < 4:
+            continue
         a = math.radians(k)
-        r1 = R + (190 if k % 10 == 0 else 170 if k % 5 == 0 else 158)
-        s.line(sx + (R + 140) * math.cos(a), sy + (R + 140) * math.sin(a), sx + r1 * math.cos(a), sy + r1 * math.sin(a),
-               "gilt", 0.9, None, 0.7)
-    for ang in (236, 304):
+        r1 = Rs + (190 if k % 10 == 0 else 170 if k % 5 == 0 else 158)
+        s.line(sx + (Rs + 140) * math.cos(a), sy + (Rs + 140) * math.sin(a), sx + r1 * math.cos(a),
+               sy + r1 * math.sin(a), "gilt", 0.9, None, 0.7)
+    for ang in (240, 300):
         a = math.radians(ang)
         ux, uy = math.cos(a), math.sin(a)
-        s.line(sx + (R + 200) * ux, sy + (R + 200) * uy, sx + (R + 356) * ux, sy + (R + 356) * uy, "rubric", 1.1)
-        s.arrow(sx + (R + 356) * ux, sy + (R + 356) * uy, ux, uy)
+        s.line(sx + (Rs + 200) * ux, sy + (Rs + 200) * uy, sx + (Rs + 356) * ux, sy + (Rs + 356) * uy, "rubric", 1.1)
+        s.arrow(sx + (Rs + 356) * ux, sy + (Rs + 356) * uy, ux, uy)
 
     # Limb shading, hatched as Leonardo shaded a sphere's turning edge.
     for a0, a1, hang in ((196, 248, 62), (292, 344, 118)):
-        outer = [(sx + R * math.cos(math.radians(a)), sy + R * math.sin(math.radians(a))) for a in range(a0, a1 + 1, 2)]
-        inner = [(sx + R * 0.955 * math.cos(math.radians(a)), sy + R * 0.955 * math.sin(math.radians(a)))
+        outer = [(sx + Rs * math.cos(math.radians(a)), sy + Rs * math.sin(math.radians(a))) for a in range(a0, a1 + 1, 2)]
+        inner = [(sx + Rs * 0.955 * math.cos(math.radians(a)), sy + Rs * 0.955 * math.sin(math.radians(a)))
                  for a in range(a1, a0 - 1, -2)]
         s.hatch(outer + inner, hang, 13, "gilt", 0.8, 0.28)
 
     # Inner shells seen through the surface, the graticule, and ripples where the lance strikes.
-    s.circle(sx, sy, R * 0.72, "line", 1.0, "10 10")
-    s.circle(sx, sy, R * 0.88, "line", 0.9, "3 9")
+    s.circle(sx, sy, Rs * 0.72, "line", 1.0, "10 10")
+    s.circle(sx, sy, Rs * 0.88, "line", 0.9, "3 9")
     wire_sphere(s, cam, (0, 0, 0), R, range(30, 81, 10), range(0, 360, 15), "gilt", 0.9, lat_max=84)
     for a, dash in ((81.5, None), (84, "6 6"), (86.2, None), (88, "4 5")):
         t = math.radians(a)
         s.poly3(cam, circle3d((0, R * math.sin(t), 0), (0, 1, 0), R * math.cos(t), 120), "rubric", 1.2, dash, 0.9)
-    s.circle(sx, sy, R, "gilt", 2.6)
+    s.circle(sx, sy, Rs, "gilt", 2.6)
     s.add("</g>")
 
     # The forge stands on the sun's axis: four vanes, a core sphere, two wheels, a coiled nozzle.
@@ -1411,7 +1422,7 @@ def plate_fucina(s: Sheet):
         t = math.radians(a)
         draw_runs(s, cam, circle3d(add(C, (0, rc * math.sin(t), 0)), (0, 1, 0), rc * math.cos(t), 120), core_front,
                   "gilt", 1.3, None)
-    s.circle(*cam(C), rc, "gilt", 1.8)
+    s.circle(*cam(C), rc * K, "gilt", 1.8)
     for n in ((0.5, 0.866, 0.0), (-0.5, 0.866, 0.0)):
         draw_runs(s, cam, circle3d(C, n, 184, 120), core_front, "gilt", 1.2)
 
@@ -1492,18 +1503,22 @@ def plate_fucina(s: Sheet):
         draw_runs(s, cam, curve, outside, "rubric", 1.1, ("5 7", 0.45), 0.8)
 
     # Names.
-    s.leader(*cam(add(C, (-92, 92, 0))), 1340, 420, "nucleo")
+    def lead(p3, dx, dy, label):
+        x, y = cam(p3)
+        s.leader(x, y, x + dx, y + dy, label)
+
+    lead(add(C, (-92, 92, 0)), -480, -230, "nucleo")
     d45 = radial(math.radians(45))[0]
-    s.leader(*cam(add(mul(d45, along(OUT, 2800) - 20), (0, 2800, 0))), 2760, 330, "pala")
-    s.leader(*cam((RW * math.cos(0.35), Yc, RW * math.sin(0.35))), 2840, 620, "ruota maestra")
-    s.leader(*cam((RX * math.cos(1.2), Yw, RX * math.sin(1.2))), 2700, 900, "ruota di scappamento")
-    s.leader(*cam((-coils[3][1], coils[3][0], 0)), 1420, 900, "bobine")
-    s.leader(*cam((-9, 1960, 0)), 1440, 1110, "lancia solare")
-    s.leader(*cam((0, R, 0)), 2420, 1230, "polo")
-    lx, ly = sx + R * math.cos(math.radians(250)), sy + R * math.sin(math.radians(250))
-    s.leader(lx, ly, 1180, 1290, "fotosfera")
-    ax_, ay_ = sx + (R + 300) * math.cos(math.radians(304)), sy + (R + 300) * math.sin(math.radians(304))
-    s.leader(ax_, ay_, ax_ + 260, ay_ - 40, "accrescimento")
+    lead(add(mul(d45, along(OUT, 2800) - 20), (0, 2800, 0)), 620, -130, "pala")
+    lead((RW * math.cos(0.35), Yc, RW * math.sin(0.35)), 460, -20, "ruota maestra")
+    lead((RX * math.cos(0.3), Yw, RX * math.sin(0.3)), 560, 40, "ruota di scappamento")
+    lead((-coils[3][1], coils[3][0], 0), -420, -10, "bobine")
+    lead((-9, 1960, 0), -420, -40, "lancia solare")
+    lead((0, R, 0), 460, -150, "polo")
+    lx, ly = sx + Rs * math.cos(math.radians(250)), sy + Rs * math.sin(math.radians(250))
+    s.leader(lx, ly, lx - 200, ly - 60, "fotosfera")
+    ax_, ay_ = sx + (Rs + 300) * math.cos(math.radians(300)), sy + (Rs + 300) * math.sin(math.radians(300))
+    s.leader(ax_, ay_, ax_ + 200, ay_ + 30, "accrescimento")
 
     # FIG. 2: the forge in plan.
     k, px, py = 0.36, 620, 1010
@@ -1526,7 +1541,7 @@ def plate_fucina(s: Sheet):
     s.fig(3060, 330, 3, "pala, in alzato")
 
     def el(r, y):
-        return 3140 + r * 0.8, 1320 - (y - Y0) * 0.75
+        return 3140 + r * 0.8, 1180 - (y - Y0) * 0.75
 
     s.line(*el(0, Y0 - 40), *el(0, Y1 + 60), "rubric", 1.0, "14 6 3 6", 0.8)
     s.poly([el(r, y) for r, y in profile], "gilt", 1.6, closed=True)
