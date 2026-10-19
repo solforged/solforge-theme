@@ -1,0 +1,36 @@
+# Solforge Light: oxblood desk, vellum sheet, clockwork gilt. After solforged.io.
+mode = "light"
+
+accent = "#765411"
+selection = "#ebd3c8"
+selection_foreground = "#1a1312"
+muted = "#857265"
+
+background = "#f6f1e6"
+dark_background = "#eee7da"
+darker_background = "#e4d9c5"
+lighter_background = "#e8dfd0"
+
+foreground = "#2a2120"
+dark_foreground = "#857265"
+light_foreground = "#4f403a"
+bright_foreground = "#1a1312"
+
+hyprland_active_border = "rgba(765411ee) rgba(863f3dee) 45deg"
+hyprland_inactive_border = "rgba(c9bba6aa)"
+
+red = "#a3302a"
+yellow = "#8a6212"
+orange = "#a5531c"
+green = "#4f6b3a"
+cyan = "#2f6e6a"
+blue = "#334f8a"
+magenta = "#8a3a63"
+brown = "#6b4423"
+
+bright_red = "#b8402f"
+bright_yellow = "#946a0c"
+bright_green = "#5a7642"
+bright_cyan = "#347a74"
+bright_blue = "#4a66a3"
+bright_magenta = "#a3507a"
