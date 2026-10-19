@@ -94,15 +94,15 @@ light_colors:
 
 spinner:
   waiting_faces:
-    - "(⚖)"
     - "(⊕)"
     - "(◇)"
     - "(✦)"
+    - "(◆)"
   thinking_faces:
-    - "(⚖)"
     - "(⊕)"
     - "(⌁)"
     - "(◈)"
+    - "(◇)"
   thinking_verbs:
     - "weighing testimony"
     - "hearing all sides"
@@ -113,17 +113,17 @@ spinner:
     - "drafting the verdict"
     - "binding fate"
   wings:
-    - ["⟪⚖", "⚖⟫"]
     - ["⟪⊕", "⊕⟫"]
+    - ["⟪◇", "◇⟫"]
     - ["⟪╸", "╺⟫"]
 
 branding:
   agent_name: "Tunon"
   welcome: "The court is in session. State your matter, or /help for commands."
-  goodbye: "The court is adjourned. ⚖"
-  response_label: " ⚖ Tunon "
-  prompt_symbol: "⚖⠀"
-  help_header: "(⚖) Available Commands"
+  goodbye: "The court is adjourned. ⊕"
+  response_label: " ⊕ Tunon "
+  prompt_symbol: "⊕⠀"
+  help_header: "(⊕) Available Commands"
 
 tool_prefix: "╎"
 
