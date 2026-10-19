@@ -45,9 +45,10 @@ them.
 
 ## Regenerate
 
-`colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds, `preview.png`
-and the omp themes in `omp/` are all generated. Edit `generate.py` (palettes)
-or `drawings.py` (backgrounds), then run:
+`colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds, `preview.png`,
+the omp themes in `omp/` and the Hermes skin in `hermes/` are all generated.
+Edit `generate.py` (palettes), `drawings.py` (backgrounds) or `mask.py` (the
+Hermes banner art), then run:
 
 ```sh
 ./generate.py
@@ -82,3 +83,23 @@ Select them in omp's settings as the dark and light themes (`theme.dark`,
 `theme.light`). Tern follows omp's choice unless its own `theme_dark` or
 `theme_light` is set, and picks the slot from the system appearance, which the
 Omarchy theme sets.
+
+## Hermes
+
+`hermes/tunon.yaml` is a Hermes Agent skin for Tunon the Adjudicator from
+*Tyranny*. Its banner art is the Face of Judgment in its hood over Kyros'
+sigil, drawn in braille at the caduceus's size (28 columns by 15 rows), with a
+`TUNON` logo above it. `mask.py` draws the art on a 56x60 dot grid.
+
+```sh
+ln -s ~/src/solforge-theme/hermes/tunon.yaml ~/.hermes/skins/
+hermes config set display.skin tunon
+```
+
+`colors` holds the dark palette and `light_colors` the light one. Neither
+sets `background`, so the TUI keeps the terminal's own background and picks
+the block that matches the terminal's polarity. The banner art takes a single
+fixed color per row, so it uses mid tones from the light palette, which clear
+3:1 on both backgrounds; the mask's rows have no color and draw in the
+terminal's foreground. The classic CLI and the desktop app read only `colors`,
+so they stay dark.
