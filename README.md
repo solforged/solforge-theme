@@ -38,8 +38,8 @@ them.
 
 ## Regenerate
 
-`colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds and
-`preview.png` are all generated. Edit `generate.py`, then run:
+`colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds, `preview.png`
+and the omp themes in `omp/` are all generated. Edit `generate.py`, then run:
 
 ```sh
 ./generate.py
@@ -58,3 +58,19 @@ omarchy theme set solforge-dark
 Omarchy renders the terminal, Hyprland, Neovim and shell configs from
 `colors.toml`, so the themes ship no Lua or terminal files and install the same
 way from a Git clone.
+
+## omp and Tern
+
+`omp/solforge-dark.json` and `omp/solforge-light.json` are oh-my-pi themes
+with a `terminal` section. Tern reads that section for its panes and window
+chrome, and draws the dark theme's tab bar in the oxblood desk color.
+
+```sh
+ln -s ~/src/solforge-theme/omp/solforge-dark.json ~/.omp/agent/themes/
+ln -s ~/src/solforge-theme/omp/solforge-light.json ~/.omp/agent/themes/
+```
+
+Select them in omp's settings as the dark and light themes (`theme.dark`,
+`theme.light`). Tern follows omp's choice unless its own `theme_dark` or
+`theme_light` is set, and picks the slot from the system appearance, which the
+Omarchy theme sets.
