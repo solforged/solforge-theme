@@ -47,7 +47,8 @@ them.
 
 `colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds, `preview.png`,
 the omp themes in `omp/`, the app themes in `ghostty/`, `zed/`, `helix/`,
-`nushell/` and `btop/`, and the Hermes skin in `hermes/` are all generated.
+`nushell/`, `btop/` and `nvim/`, and the Hermes skin in `hermes/` are all
+generated.
 Edit `generate.py` (palettes and app color roles), `drawings.py`
 (backgrounds) or `mask.py` (the Hermes banner art), then run:
 
@@ -66,8 +67,8 @@ omarchy theme set solforge-dark
 ```
 
 Omarchy renders the terminal, Hyprland, Neovim and shell configs from
-`colors.toml`, so the themes ship no Lua or terminal files and install the same
-way from a Git clone.
+`colors.toml`, so the Omarchy theme directories ship no Lua or terminal files
+and install the same way from a Git clone.
 
 ## omp and Tern
 
@@ -85,7 +86,7 @@ Select them in omp's settings as the dark and light themes (`theme.dark`,
 `theme_light` is set, and picks the slot from the system appearance, which the
 Omarchy theme sets.
 
-## Ghostty, Zed, Helix, Nushell and btop
+## Ghostty, Zed, Helix, Neovim, Nushell and btop
 
 These ports use the same palettes outside Omarchy, for example on macOS.
 
@@ -94,6 +95,7 @@ These ports use the same palettes outside Omarchy, for example on macOS.
 | Ghostty | `ghostty/solforge-dark`, `ghostty/solforge-light` | `theme = dark:solforge-dark, light:solforge-light` |
 | Zed | `zed/solforge.json`, a family with both variants | `"theme": { "mode": "system", "dark": "Solforge Dark", "light": "Solforge Light" }` |
 | Helix | `helix/solforge-dark.toml`, `helix/solforge-light.toml` | `theme = "solforge-dark"` |
+| Neovim | `nvim/colors/solforge.lua`, both variants | `:colorscheme solforge`; `background` picks the variant |
 | Nushell | `nushell/solforge-dark.json`, `nushell/solforge-light.json` | `color_config`, loaded from the themes directory |
 | btop | `btop/solforge-dark.theme`, `btop/solforge-light.theme` | `color_theme = "solforge-dark"` |
 
@@ -101,14 +103,16 @@ These ports use the same palettes outside Omarchy, for example on macOS.
 ln -s ~/src/solforge-theme/ghostty/solforge-* ~/.config/ghostty/themes/
 ln -s ~/src/solforge-theme/zed/solforge.json ~/.config/zed/themes/
 ln -s ~/src/solforge-theme/helix/solforge-*.toml ~/.config/helix/themes/
+ln -s ~/src/solforge-theme/nvim/colors/solforge.lua ~/.config/nvim/colors/
 ln -s ~/src/solforge-theme/nushell/solforge-*.json ~/.config/nushell/themes/
 ln -s ~/src/solforge-theme/btop/solforge-*.theme ~/.config/btop/themes/
 ```
 
 Ghostty carries the 16 terminal colors that omp gives Tern, so CLI tools
 that use ANSI color names, such as yazi, lazygit, starship and
-`bat --theme=ansi`, pick up the palette from it. Ghostty and Zed follow the
-system appearance; Helix, Nushell and btop take one variant at a time.
+`bat --theme=ansi`, pick up the palette from it. Ghostty, Zed and Neovim follow
+the system appearance (Neovim through `background`); Helix, Nushell and btop
+take one variant at a time.
 
 ## Hermes
 
