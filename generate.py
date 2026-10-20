@@ -303,6 +303,86 @@ NU_COLORS = {
     "shape_variable": "rubric", "shape_vardecl": "rubric",
 }
 
+# Neovim highlight groups over the swatches plus washes, pigments faded into the
+# sheet for backgrounds. A string links to another group.
+NVIM_GROUPS = {
+    "Normal": {"fg": "fg", "bg": "bg"}, "NormalNC": "Normal",
+    "NormalFloat": {"fg": "fg", "bg": "widget"}, "FloatBorder": {"fg": "border", "bg": "widget"},
+    "FloatTitle": {"fg": "gilt", "bg": "widget", "bold": True},
+    "Cursor": {"fg": "bg", "bg": "gilt"}, "lCursor": "Cursor", "CursorIM": "Cursor", "TermCursor": "Cursor",
+    "CursorLine": {"bg": "bg_alt"}, "CursorColumn": {"bg": "bg_alt"}, "ColorColumn": {"bg": "bg_alt"},
+    "CursorLineNr": {"fg": "gilt", "bold": True}, "LineNr": {"fg": "muted"},
+    "SignColumn": {"bg": "bg"}, "FoldColumn": {"fg": "muted", "bg": "bg"}, "Folded": {"fg": "gray", "bg": "bg_hl"},
+    "WinSeparator": {"fg": "border"}, "VertSplit": "WinSeparator",
+    "StatusLine": {"fg": "fg", "bg": "chrome"}, "StatusLineNC": {"fg": "comment", "bg": "bg_alt"},
+    "TabLine": {"fg": "comment", "bg": "chrome"}, "TabLineFill": {"bg": "chrome"},
+    "TabLineSel": {"fg": "fg_bright", "bg": "bg", "bold": True},
+    "WinBar": {"fg": "gray", "bg": "bg"}, "WinBarNC": {"fg": "comment", "bg": "bg"},
+    "Pmenu": {"fg": "fg", "bg": "widget"}, "PmenuSel": {"fg": "fg_bright", "bg": "sel"},
+    "PmenuSbar": {"bg": "bg_hl"}, "PmenuThumb": {"bg": "border"},
+    "PmenuKind": {"fg": "blue", "bg": "widget"}, "PmenuExtra": {"fg": "comment", "bg": "widget"},
+    "PmenuMatch": {"fg": "gilt", "bg": "widget", "bold": True}, "PmenuMatchSel": {"fg": "gilt", "bg": "sel", "bold": True},
+    "WildMenu": "PmenuSel", "Visual": {"bg": "sel"}, "VisualNOS": "Visual",
+    "Search": {"bg": "gilt_wash_strong"}, "IncSearch": {"fg": "bg", "bg": "gilt"}, "CurSearch": "IncSearch",
+    "Substitute": {"fg": "bg", "bg": "rubric"}, "MatchParen": {"fg": "gilt", "bold": True, "underline": True},
+    "NonText": {"fg": "border"}, "Whitespace": {"fg": "border_muted"}, "SpecialKey": {"fg": "border"},
+    "EndOfBuffer": {"fg": "bg"}, "Conceal": {"fg": "comment"},
+    "Title": {"fg": "gilt", "bold": True}, "Directory": {"fg": "blue"},
+    "ErrorMsg": {"fg": "red"}, "WarningMsg": {"fg": "orange"}, "MoreMsg": {"fg": "green"},
+    "ModeMsg": {"fg": "gilt", "bold": True}, "Question": {"fg": "green"},
+    "QuickFixLine": {"bg": "bg_hl", "bold": True},
+    "SpellBad": {"sp": "red", "undercurl": True}, "SpellCap": {"sp": "orange", "undercurl": True},
+    "SpellRare": {"sp": "madder", "undercurl": True}, "SpellLocal": {"sp": "cyan", "undercurl": True},
+    "DiffAdd": {"bg": "diff_add"}, "DiffDelete": {"fg": "red", "bg": "diff_delete"},
+    "DiffChange": {"bg": "gilt_wash"}, "DiffText": {"bg": "gilt_wash_strong"},
+    "Added": {"fg": "green"}, "Changed": {"fg": "gilt"}, "Removed": {"fg": "red"},
+    "Comment": {"fg": "comment", "italic": True}, "Constant": {"fg": "orange"}, "String": {"fg": "green"},
+    "Character": "String", "Number": "Constant", "Boolean": "Constant", "Float": "Constant",
+    "Identifier": {"fg": "fg"}, "Function": {"fg": "blue"}, "Statement": {"fg": "madder"},
+    "Conditional": "Statement", "Repeat": "Statement", "Keyword": "Statement", "Exception": "Statement",
+    "Label": {"fg": "rubric"}, "Operator": {"fg": "gray"},
+    "PreProc": {"fg": "madder"}, "Include": "PreProc", "Define": "PreProc", "Macro": "PreProc", "PreCondit": "PreProc",
+    "Type": {"fg": "gilt"}, "StorageClass": "Type", "Structure": "Type", "Typedef": "Type",
+    "Special": {"fg": "rubric"}, "SpecialChar": {"fg": "cyan"}, "Tag": {"fg": "rubric"}, "Delimiter": {"fg": "gray"},
+    "SpecialComment": {"fg": "comment", "bold": True}, "Debug": {"fg": "orange"},
+    "Underlined": {"underline": True}, "Error": {"fg": "red"}, "Todo": {"fg": "bg", "bg": "gilt", "bold": True},
+    "DiagnosticError": {"fg": "red"}, "DiagnosticWarn": {"fg": "orange"}, "DiagnosticInfo": {"fg": "blue"},
+    "DiagnosticHint": {"fg": "comment"}, "DiagnosticOk": {"fg": "green"},
+    "DiagnosticUnderlineError": {"sp": "red", "undercurl": True},
+    "DiagnosticUnderlineWarn": {"sp": "orange", "undercurl": True},
+    "DiagnosticUnderlineInfo": {"sp": "blue", "undercurl": True},
+    "DiagnosticUnderlineHint": {"sp": "comment", "undercurl": True},
+    "DiagnosticUnderlineOk": {"sp": "green", "undercurl": True},
+    "DiagnosticVirtualTextError": {"fg": "red", "bg": "red_wash"},
+    "DiagnosticVirtualTextWarn": {"fg": "orange", "bg": "orange_wash"},
+    "DiagnosticVirtualTextInfo": {"fg": "blue", "bg": "blue_wash"},
+    "DiagnosticVirtualTextHint": {"fg": "comment", "bg": "bg_alt"},
+    "DiagnosticVirtualTextOk": {"fg": "green", "bg": "green_wash"},
+    "DiagnosticUnnecessary": {"fg": "muted"}, "DiagnosticDeprecated": {"strikethrough": True},
+    "LspReferenceText": {"bg": "bg_hl"}, "LspReferenceRead": {"bg": "bg_hl"},
+    "LspReferenceWrite": {"bg": "bg_hl", "underline": True},
+    "LspInlayHint": {"fg": "comment", "bg": "bg_alt", "italic": True},
+    "LspSignatureActiveParameter": {"fg": "gilt", "bold": True},
+    "@comment": "Comment", "@keyword": "Keyword", "@function": "Function", "@function.builtin": "Function",
+    "@function.macro": "Macro", "@string": "String", "@string.escape": {"fg": "cyan"},
+    "@string.regexp": {"fg": "cyan"}, "@string.special": {"fg": "cyan"},
+    "@string.special.url": {"fg": "comment", "underline": True}, "@number": "Number", "@boolean": "Boolean",
+    "@constant": "Constant", "@constant.builtin": "Constant", "@type": "Type", "@type.builtin": "Type",
+    "@constructor": {"fg": "gilt"}, "@variable": {"fg": "fg"}, "@variable.builtin": {"fg": "rubric"},
+    "@variable.parameter": {"fg": "fg"}, "@variable.member": {"fg": "fg"}, "@property": {"fg": "fg"},
+    "@attribute": {"fg": "rubric"}, "@tag": "Tag", "@tag.attribute": {"fg": "gilt"}, "@tag.delimiter": "Delimiter",
+    "@punctuation": "Delimiter", "@punctuation.bracket": "Delimiter", "@punctuation.delimiter": "Delimiter",
+    "@punctuation.special": {"fg": "rubric"}, "@operator": "Operator", "@label": "Label", "@module": {"fg": "fg"},
+    "@markup.heading": {"fg": "gilt", "bold": True}, "@markup.strong": {"bold": True},
+    "@markup.italic": {"italic": True}, "@markup.strikethrough": {"strikethrough": True},
+    "@markup.underline": {"underline": True}, "@markup.link": {"fg": "gilt"}, "@markup.link.label": {"fg": "gilt"},
+    "@markup.link.url": {"fg": "comment", "underline": True}, "@markup.raw": {"fg": "rubric"},
+    "@markup.quote": {"fg": "gray", "italic": True}, "@markup.list": {"fg": "rubric"},
+    "@diff.plus": "Added", "@diff.minus": "Removed", "@diff.delta": "Changed",
+    "GitSignsAdd": "Added", "GitSignsChange": "Changed", "GitSignsDelete": "Removed",
+    "FlashLabel": {"fg": "bg", "bg": "rubric", "bold": True},
+}
+
 
 COLOR_ORDER = [
     "mode",
@@ -702,6 +782,56 @@ def btop_theme(theme: dict) -> str:
     return "\n".join(out) + "\n"
 
 
+def nvim_colorscheme() -> str:
+    """One Neovim colorscheme for both palettes; 'background' picks the variant."""
+    palettes, ansi = {}, {}
+    for variant, theme in THEMES.items():
+        v = swatches(theme)
+        washes = {f"{n}_wash": mix(v[n], v["bg"], 0.85) for n in ("red", "orange", "blue", "green", "gilt")}
+        palettes[variant] = {**v, **washes, "gilt_wash_strong": mix(v["gilt"], v["bg"], 0.7)}
+        ansi[variant] = ansi16(theme)
+
+    def lua(spec) -> str:
+        if isinstance(spec, str):
+            return f'{{ link = "{spec}" }}'
+        parts = []
+        for key, value in spec.items():
+            if key in ("fg", "bg", "sp"):
+                if value not in palettes["dark"]:
+                    raise SystemExit(f"nvim group names unknown color {value}")
+                parts.append(f"{key} = p.{value}")
+            else:
+                parts.append(f"{key} = {str(value).lower()}")
+        return "{ " + ", ".join(parts) + " }"
+
+    def table(colors: dict[str, str], indent: str) -> list[str]:
+        return [f'{indent}{k} = "{c}",' for k, c in colors.items()]
+
+    out = [f"-- Solforge for Neovim. {GENERATED}",
+           "-- 'background' picks the palette: dark for Solforge Dark, light for Solforge Light.",
+           "local palettes = {"]
+    for variant in THEMES:
+        out += [f"  {variant} = {{", *table(palettes[variant], "    "), "  },"]
+    out += ["}", "local ansi = {"]
+    for variant in THEMES:
+        out.append(f"  {variant} = {{ " + ", ".join(f'"{c}"' for c in ansi[variant]) + " },")
+    out += ["}", "",
+            'vim.cmd("highlight clear")',
+            'if vim.g.syntax_on then vim.cmd("syntax reset") end',
+            'vim.g.colors_name = "solforge"',
+            'local variant = vim.o.background == "light" and "light" or "dark"',
+            "local p = palettes[variant]",
+            "for i, color in ipairs(ansi[variant]) do",
+            '  vim.g["terminal_color_" .. (i - 1)] = color',
+            "end",
+            "local function hl(name, spec)",
+            "  vim.api.nvim_set_hl(0, name, spec)",
+            "end",
+            ""]
+    out += [f'hl("{group}", {lua(spec)})' for group, spec in NVIM_GROUPS.items()]
+    return "\n".join(out) + "\n"
+
+
 def ports_report(theme: dict) -> None:
     """Editor text roles over the editor sheet and the desk-colored chrome."""
     v = swatches(theme)
@@ -781,6 +911,9 @@ def main() -> int:
     (ROOT / "zed").mkdir(exist_ok=True)
     (ROOT / "zed" / "solforge.json").write_text(zed_theme())
     print(f"Zed theme family -> {ROOT / 'zed' / 'solforge.json'}")
+    (ROOT / "nvim" / "colors").mkdir(parents=True, exist_ok=True)
+    (ROOT / "nvim" / "colors" / "solforge.lua").write_text(nvim_colorscheme())
+    print(f"Neovim colorscheme -> {ROOT / 'nvim' / 'colors' / 'solforge.lua'}")
     (ROOT / "hermes").mkdir(exist_ok=True)
     (ROOT / "hermes" / "tunon.yaml").write_text(hermes_skin())
     print(f"Hermes skin -> {ROOT / 'hermes' / 'tunon.yaml'}")
