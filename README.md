@@ -15,7 +15,9 @@ wireframes on the site's sheet-on-desk layout.
 Both palettes start from the site's CSS tokens and extend them into a full
 terminal palette in pigment colors: sanguine, ochre, verdigris, lapis, madder
 and sepia. Body text clears 4.5:1 against the background and every ANSI color
-clears 4:1. `generate.py` prints the contrast table on each run.
+clears 4:1. Bright black, the muted tone terminal apps use for dim text, clears
+4.5:1, so Ghostty's `minimum-contrast = 4.5` keeps it instead of swapping in
+white or black. `generate.py` prints the contrast table on each run.
 
 | Token | Dark | Light | Used for |
 | --- | --- | --- | --- |
