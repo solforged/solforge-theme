@@ -4,7 +4,7 @@ mode = "light"
 accent = "#765411"
 selection = "#ebd3c8"
 selection_foreground = "#1a1312"
-muted = "#857265"
+muted = "#7c6a5e"
 
 background = "#f6f1e6"
 dark_background = "#eee7da"
@@ -12,7 +12,7 @@ darker_background = "#e4d9c5"
 lighter_background = "#e8dfd0"
 
 foreground = "#2a2120"
-dark_foreground = "#857265"
+dark_foreground = "#7c6a5e"
 light_foreground = "#4f403a"
 bright_foreground = "#1a1312"
 

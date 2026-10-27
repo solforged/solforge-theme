@@ -27,7 +27,7 @@ local palettes = {
     ansi0 = "#4a2e25",
     ansi7 = "#c2ab98",
     ansi15 = "#faf3e4",
-    muted = "#8f7262",
+    muted = "#917464",
     red_wash = "#311612",
     orange_wash = "#311c11",
     blue_wash = "#241e24",
@@ -61,7 +61,7 @@ local palettes = {
     ansi0 = "#2a2120",
     ansi7 = "#8a7a6d",
     ansi15 = "#c9bba6",
-    muted = "#857265",
+    muted = "#7c6a5e",
     red_wash = "#ead4ca",
     orange_wash = "#ead9c8",
     blue_wash = "#d9d9d8",
@@ -71,8 +71,8 @@ local palettes = {
   },
 }
 local ansi = {
-  dark = { "#4a2e25", "#d9654f", "#94ad7f", "#dfb15a", "#8798c7", "#c98597", "#6fa9a3", "#c2ab98", "#8f7262", "#de8a70", "#b5cba0", "#efcd85", "#aab8de", "#dfa7b6", "#96c7c0", "#faf3e4" },
-  light = { "#2a2120", "#a3302a", "#4f6b3a", "#8a6212", "#334f8a", "#8a3a63", "#2f6e6a", "#8a7a6d", "#857265", "#b8402f", "#5a7642", "#946a0c", "#4a66a3", "#a3507a", "#347a74", "#c9bba6" },
+  dark = { "#4a2e25", "#d9654f", "#94ad7f", "#dfb15a", "#8798c7", "#c98597", "#6fa9a3", "#c2ab98", "#917464", "#de8a70", "#b5cba0", "#efcd85", "#aab8de", "#dfa7b6", "#96c7c0", "#faf3e4" },
+  light = { "#2a2120", "#a3302a", "#4f6b3a", "#8a6212", "#334f8a", "#8a3a63", "#2f6e6a", "#8a7a6d", "#7c6a5e", "#b8402f", "#5a7642", "#946a0c", "#4a66a3", "#a3507a", "#347a74", "#c9bba6" },
 }
 
 vim.cmd("highlight clear")
