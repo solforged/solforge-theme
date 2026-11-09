@@ -637,6 +637,37 @@ def ghostty_theme(theme: dict) -> str:
     return "\n".join(out) + "\n"
 
 
+# Rex keeps custom themes as a JSON list in its `Workspace.customThemes`
+# default and selects them by id, so the ids and creation times stay fixed.
+REX_THEMES = {
+    "dark": {"id": "custom-ECFA698F-859A-42C9-8E68-6CF77C160941", "createdAt": 815897643.442697},
+    "light": {"id": "custom-84E4B7A4-558E-4667-AD8D-DB75F55D41AA", "createdAt": 815948342.374908},
+}
+
+
+def rex_themes() -> str:
+    """Rex custom themes with Ghostty's color roles; dotfiles write them into Rex's defaults."""
+
+    def color(hex_color: str) -> dict:
+        r, g, b = (v / 255 for v in rgb(hex_color))
+        return {"colorSpace": "srgb", "red": r, "green": g, "blue": b, "alpha": 1}
+
+    docs = []
+    for variant, theme in THEMES.items():
+        u, c = theme["ui"], theme["colors"]
+        palette = {
+            "background": u["bg"], "foreground": u["fg"], "cursor": u["gilt"], "cursorText": u["bg"],
+            "selectionBackground": u["sel"], "selectionForeground": c["selection_foreground"],
+        }
+        docs.append({
+            **REX_THEMES[variant], "name": theme["name"], "appearance": variant, "source": {"manual": {}},
+            "palette": {**{k: color(v) for k, v in palette.items()}, "ansi": [color(x) for x in ansi16(theme)],
+                        "paletteBase": {}, "paletteOverrides": {}, "paletteGenerate": True,
+                        "paletteHarmonious": True},
+        })
+    return json.dumps(docs, indent=2) + "\n"
+
+
 def zed_style(theme: dict) -> dict:
     """Zed theme style: desk-colored chrome around a sheet-colored editor."""
     v, c = swatches(theme), theme["colors"]
@@ -911,6 +942,9 @@ def main() -> int:
     (ROOT / "zed").mkdir(exist_ok=True)
     (ROOT / "zed" / "solforge.json").write_text(zed_theme())
     print(f"Zed theme family -> {ROOT / 'zed' / 'solforge.json'}")
+    (ROOT / "rex").mkdir(exist_ok=True)
+    (ROOT / "rex" / "solforge.json").write_text(rex_themes())
+    print(f"Rex themes -> {ROOT / 'rex' / 'solforge.json'}")
     (ROOT / "nvim" / "colors").mkdir(parents=True, exist_ok=True)
     (ROOT / "nvim" / "colors" / "solforge.lua").write_text(nvim_colorscheme())
     print(f"Neovim colorscheme -> {ROOT / 'nvim' / 'colors' / 'solforge.lua'}")

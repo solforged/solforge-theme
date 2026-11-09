@@ -49,7 +49,7 @@ them.
 
 `colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds, `preview.png`,
 the omp themes in `omp/`, the app themes in `ghostty/`, `zed/`, `helix/`,
-`nushell/`, `btop/` and `nvim/`, and the Hermes skin in `hermes/` are all
+`nushell/`, `btop/`, `nvim/` and `rex/`, and the Hermes skin in `hermes/` are all
 generated.
 Edit `generate.py` (palettes and app color roles), `drawings.py`
 (backgrounds) or `mask.py` (the Hermes banner art), then run:
@@ -115,6 +115,21 @@ that use ANSI color names, such as yazi, lazygit, starship and
 `bat --theme=ansi`, pick up the palette from it. Ghostty, Zed and Neovim follow
 the system appearance (Neovim through `background`); Helix, Nushell and btop
 take one variant at a time.
+
+## Rex
+
+`rex/solforge.json` holds both variants with Ghostty's colors. Rex stores
+custom themes as JSON data in its preferences and picks them by id, so write
+the file there and select the ids, then relaunch Rex:
+
+```sh
+defaults write com.superlogical.rex Workspace.customThemes \
+  -data "$(xxd -p ~/src/solforge-theme/rex/solforge.json | tr -d '\n')"
+defaults write com.superlogical.rex Workspace.darkThemeID custom-ECFA698F-859A-42C9-8E68-6CF77C160941
+defaults write com.superlogical.rex Workspace.lightThemeID custom-84E4B7A4-558E-4667-AD8D-DB75F55D41AA
+```
+
+This replaces any other custom themes in Rex.
 
 ## Hermes
 
