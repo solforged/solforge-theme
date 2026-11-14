@@ -524,19 +524,23 @@ body, .mod-macos, .mod-windows, .mod-linux {
   border-width: 1px 0 0 1px;
 }
 
-/* The file tree: folders as mono group labels, the open note marked by a
-   gilt rule on its left edge, guides in hairline. */
+/* The file tree: folders as mono group labels, guides in hairline.
+   Anchor the open-note rule to its label: Obsidian gives nested rows negative
+   margins that extend their hit areas back to the sidebar edge. */
 .nav-folder-title-content {
   font-family: var(--font-monospace);
   font-size: 11.5px;
   letter-spacing: .06em;
   text-transform: uppercase;
 }
-.tree-item-self.is-active { box-shadow: inset 2px 0 0 var(--interactive-accent); }
-.tree-item-self.has-focus { box-shadow: 0 0 0 1px var(--background-modifier-border-focus); }
-.tree-item-self.is-active.has-focus {
-  box-shadow: inset 2px 0 0 var(--interactive-accent), 0 0 0 1px var(--background-modifier-border-focus);
+.nav-file-title-content {
+  margin-inline-start: -10px;
+  padding-inline-start: 10px;
 }
+.nav-file-title.is-active .nav-file-title-content {
+  box-shadow: inset 2px 0 0 var(--interactive-accent);
+}
+.tree-item-self.has-focus { box-shadow: 0 0 0 1px var(--background-modifier-border-focus); }
 .workspace-sidedock-vault-profile { font-family: var(--font-monospace); }
 
 /* The properties heading is an eyebrow, as above the site's titles. */
