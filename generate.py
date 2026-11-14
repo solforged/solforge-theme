@@ -9,6 +9,7 @@ site's sheet-on-desk layout. Requires rsvg-convert and ImageMagick.
 
 from __future__ import annotations
 
+import colorsys
 import json
 import shutil
 import subprocess
@@ -17,6 +18,7 @@ import tempfile
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+import obsidian
 from drawings import FONT, PLATES, Sheet
 from mask import face_of_judgment
 
@@ -381,6 +383,103 @@ NVIM_GROUPS = {
     "@diff.plus": "Added", "@diff.minus": "Removed", "@diff.delta": "Changed",
     "GitSignsAdd": "Added", "GitSignsChange": "Changed", "GitSignsDelete": "Removed",
     "FlashLabel": {"fg": "bg", "bg": "rubric", "bold": True},
+}
+
+# Obsidian variables, as names of Obsidian swatches (the `ui` vars plus `muted`,
+# the site's desk, slip and line, and the palette's pigments). A tuple fades the
+# swatch to an alpha; a string starting with `var(` passes through. Chrome sits
+# on the sheet like the site's bars and drawer; `obsidian.py` puts the desk
+# around the open note.
+OBSIDIAN_VARS = {
+    "--color-base-00": "bg", "--color-base-05": "bg_alt", "--color-base-10": "bg_alt",
+    "--color-base-20": "slip", "--color-base-25": "slip", "--color-base-30": "border_muted",
+    "--color-base-35": "rule", "--color-base-40": "border", "--color-base-50": "muted",
+    "--color-base-60": "comment", "--color-base-70": "gray", "--color-base-100": "fg",
+    "--background-primary": "bg", "--background-primary-alt": "bg_alt",
+    "--background-secondary": "bg", "--background-secondary-alt": "bg_alt",
+    "--background-modifier-hover": "slip", "--background-modifier-active-hover": ("gilt", 0.14),
+    "--background-modifier-border": "border_muted", "--background-modifier-border-hover": "border",
+    "--background-modifier-border-focus": "gilt", "--background-modifier-form-field": "bg_alt",
+    "--background-modifier-form-field-hover": "bg_alt", "--background-modifier-cover": ("desk", 0.5),
+    "--interactive-normal": "bg", "--interactive-hover": "bg_alt",
+    "--interactive-accent": "var(--color-accent)", "--interactive-accent-hover": "var(--color-accent-1)",
+    "--text-normal": "fg", "--text-muted": "gray", "--text-faint": "muted",
+    "--text-accent": "var(--color-accent)", "--text-accent-hover": "var(--color-accent-1)",
+    "--text-on-accent": "bg", "--text-on-accent-inverted": "bg",
+    "--text-error": "red", "--text-warning": "orange", "--text-success": "green",
+    "--text-selection": "sel", "--text-highlight-bg": ("gilt", 0.28), "--caret-color": "gilt",
+    "--divider-color": "border_muted", "--divider-color-hover": "gilt",
+    "--titlebar-background": "bg", "--titlebar-background-focused": "bg",
+    "--titlebar-border-color": "border_muted", "--titlebar-text-color": "comment",
+    "--titlebar-text-color-focused": "gray",
+    "--ribbon-background": "bg", "--ribbon-background-collapsed": "bg",
+    "--tab-container-background": "bg", "--tab-background-active": "var(--tab-container-background)",
+    "--tab-divider-color": "border_muted", "--tab-outline-color": "transparent",
+    "--tab-text-color": "muted", "--tab-text-color-active": "comment", "--tab-text-color-focused": "comment",
+    "--tab-text-color-focused-active": "gray", "--tab-text-color-focused-active-current": "fg",
+    "--tab-text-color-focused-highlighted": "gilt",
+    "--status-bar-background": "bg", "--status-bar-border-color": "border_muted",
+    "--status-bar-text-color": "comment",
+    "--icon-color": "comment", "--icon-color-hover": "gray", "--icon-color-active": "gilt",
+    "--icon-color-focused": "fg",
+    "--nav-item-color": "gray", "--nav-item-color-hover": "fg", "--nav-item-color-active": "gilt",
+    "--nav-item-color-selected": "fg_bright", "--nav-item-color-highlighted": "gilt",
+    "--nav-item-background-hover": "slip", "--nav-item-background-active": "var(--background-primary)",
+    "--nav-item-background-selected": "sel", "--nav-indentation-guide-color": "border_muted",
+    "--nav-heading-color": "comment", "--nav-heading-color-hover": "gray",
+    "--nav-heading-color-collapsed": "comment", "--nav-heading-color-collapsed-hover": "gray",
+    "--indentation-guide-color": "border_muted", "--indentation-guide-color-active": "border",
+    "--h1-color": "fg", "--h2-color": "fg", "--h3-color": "fg", "--h4-color": "fg",
+    "--h5-color": "gray", "--h6-color": "comment", "--heading-formatting": "muted",
+    "--bold-color": "fg_bright", "--italic-color": "var(--text-normal)",
+    "--link-color": "var(--text-accent)", "--link-color-hover": "var(--text-accent)",
+    "--link-external-color": "var(--text-accent)", "--link-external-color-hover": "var(--text-accent)",
+    "--link-unresolved-color": "var(--text-accent)", "--link-unresolved-decoration-color": "rubric",
+    "--link-unresolved-decoration-style": "dashed", "--link-unresolved-opacity": "1",
+    "--list-marker-color": "rubric", "--list-marker-color-hover": "gilt",
+    "--list-marker-color-collapsed": "gilt",
+    "--blockquote-border-color": "border", "--blockquote-color": "gray", "--hr-color": "border",
+    "--checkbox-color": "var(--interactive-accent)", "--checkbox-color-hover": "var(--interactive-accent-hover)",
+    "--checkbox-border-color": "comment", "--checkbox-border-color-hover": "gilt",
+    "--checkbox-marker-color": "bg", "--checklist-done-color": "comment",
+    "--code-background": "bg_alt", "--code-border-color": "border_muted", "--code-normal": "fg",
+    "--code-comment": "comment", "--code-function": "blue", "--code-important": "rubric",
+    "--code-keyword": "madder", "--code-operator": "gray", "--code-property": "fg",
+    "--code-punctuation": "gray", "--code-string": "green", "--code-tag": "rubric", "--code-value": "orange",
+    "--table-border-color": "border_muted", "--table-header-border-color": "border",
+    "--table-header-color": "gray", "--table-row-background-hover": "bg_alt",
+    "--table-selection": ("gilt", 0.14), "--table-selection-border-color": "gilt",
+    "--tag-color": "gilt", "--tag-color-hover": "gilt", "--tag-background": "transparent",
+    "--tag-background-hover": ("gilt", 0.12), "--tag-border-color": "border", "--tag-border-color-hover": "gilt",
+    "--pill-border-color": "border_muted", "--pill-border-color-hover": "border",
+    "--embed-border-start": "1px solid var(--solforge-line)",
+    "--metadata-label-text-color": "comment", "--metadata-label-text-color-hover": "gray",
+    "--metadata-divider-color": "border_muted", "--metadata-border-color": "border_muted",
+    "--modal-background": "bg", "--modal-sidebar-background": "bg_alt", "--modal-border-color": "border",
+    "--prompt-background": "bg", "--prompt-border-color": "border",
+    "--setting-items-background": "slip", "--setting-items-border-color": "transparent",
+    "--setting-items-divider-color": "border_muted", "--setting-group-heading-color": "rubric",
+    "--scrollbar-thumb-bg": ("border", 0.45), "--scrollbar-active-thumb-bg": "border",
+    "--slider-track-background": "border_muted", "--slider-thumb-background": "fg_bright",
+    "--slider-thumb-background-hover": "fg_bright", "--slider-thumb-border-color": "border",
+    "--graph-line": "border", "--graph-node": "gray", "--graph-node-unresolved": "muted",
+    "--graph-node-focused": "gilt", "--graph-node-tag": "rubric", "--graph-node-attachment": "cyan",
+    "--graph-text": "fg",
+    "--callout-default": "rubric", "--callout-info": "blue", "--callout-todo": "blue",
+    "--callout-summary": "cyan", "--callout-tip": "cyan", "--callout-important": "gilt",
+    "--callout-success": "green", "--callout-question": "orange", "--callout-warning": "orange",
+    "--callout-fail": "red", "--callout-error": "red", "--callout-bug": "red",
+    "--callout-example": "madder", "--callout-quote": "comment",
+    # Site tokens that Obsidian has no variable for; `obsidian.py` names them.
+    "--solforge-desk": "desk", "--solforge-slip": "slip", "--solforge-line": "border",
+    "--solforge-rubric": "rubric",
+}
+
+# Obsidian's pigment names and the palette colors behind them. Each gets an
+# `-rgb` twin, which plugins read.
+OBSIDIAN_PIGMENTS = {
+    "red": "red", "orange": "orange", "yellow": "yellow", "green": "green", "cyan": "cyan",
+    "blue": "blue", "purple": "magenta", "pink": "bright_magenta",
 }
 
 
@@ -863,6 +962,65 @@ def nvim_colorscheme() -> str:
     return "\n".join(out) + "\n"
 
 
+def obsidian_swatches(theme: dict) -> dict[str, str]:
+    """Swatches the Obsidian roles name: the editor swatches plus site tokens."""
+    v, s = swatches(theme), theme["site"]
+    return {**v, "desk": s["desk"], "slip": s["slip"], "rule": mix(v["border_muted"], v["border"], 0.5),
+            "yellow": theme["colors"]["yellow"]}
+
+
+def obsidian_block(variant: str, theme: dict) -> list[str]:
+    """One palette's variables; Obsidian sets `.theme-dark` or `.theme-light` on the body."""
+    v, c = obsidian_swatches(theme), theme["colors"]
+    lines = [f".theme-{variant} {{"]
+    # The accent picker writes --accent-h/s/l on the body, so gilt goes in as HSL
+    # and a picked accent still reaches every role that follows the accent.
+    r, g, b = (x / 255 for x in rgb(v["gilt"]))
+    hue, light, sat = colorsys.rgb_to_hls(r, g, b)
+    lines += [f"  --accent-h: {hue * 360:.2f};", f"  --accent-s: {sat * 100:.2f}%;", f"  --accent-l: {light * 100:.2f}%;"]
+    # Obsidian lightens the accent for hover; on the light sheet that fades it,
+    # so the light palette darkens instead.
+    step = (1.12, 1.24) if variant == "dark" else (0.86, 0.74)
+    for i, k in enumerate(step, 1):
+        lines.append(f"  --color-accent-{i}: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) * {k}));")
+    for name, key in OBSIDIAN_PIGMENTS.items():
+        lines += [f"  --color-{name}: {c[key]};", f"  --color-{name}-rgb: {', '.join(map(str, rgb(c[key])))};"]
+    for var, spec in OBSIDIAN_VARS.items():
+        if isinstance(spec, tuple):
+            value = alpha(v[spec[0]], spec[1])
+        elif spec in v:
+            value = v[spec]
+        elif spec.startswith("var(") or " " in spec or spec[0].isdigit() or spec in ("transparent", "dashed"):
+            value = spec
+        else:
+            raise SystemExit(f"obsidian var {var} names unknown color {spec}")
+        lines.append(f"  {var}: {value};")
+    lines.append(f"  --background-modifier-box-shadow: {alpha(v['desk'], 0.35 if variant == 'dark' else 0.14)};")
+    return lines + ["}"]
+
+
+def obsidian_theme() -> str:
+    """Obsidian theme.css: both palettes, then the shared type and layout from obsidian.py."""
+    out = [f"/* Solforge for Obsidian: oxblood desk, a sheet of dark paper or vellum, clockwork gilt",
+           f"   and rubric red. After solforged.io. {GENERATED} */", "",
+           # The platform classes reset input radii, so the block names them to win.
+           "body, .mod-macos, .mod-windows, .mod-linux {"]
+    out += [f"  {k}: {v};" for k, v in obsidian.TYPE.items()]
+    out.append("}")
+    for variant, theme in THEMES.items():
+        out += ["", *obsidian_block(variant, theme)]
+    return "\n".join(out) + "\n" + obsidian.RULES
+
+
+def obsidian_report(theme: dict) -> None:
+    """Note and chrome text over the sheet, the plate and slips."""
+    v = obsidian_swatches(theme)
+    texts = ["fg", "gray", "comment", "muted", "gilt", "rubric", "red", "orange", "green", "cyan", "blue", "madder"]
+    low = sorted((contrast(v[t], v[s]), t, s) for t in texts for s in ["bg", "bg_alt", "slip"])[:3]
+    sel = contrast(v["fg"], v["sel"])
+    print("  obsidian lowest: " + ", ".join(f"{t} on {s} {r:.1f}" for r, t, s in low) + f"; fg on sel {sel:.1f}")
+
+
 def ports_report(theme: dict) -> None:
     """Editor text roles over the editor sheet and the desk-colored chrome."""
     v = swatches(theme)
@@ -917,6 +1075,7 @@ def main() -> int:
             (ROOT / rel).write_text(text)
         omp_report(theme)
         ports_report(theme)
+        obsidian_report(theme)
         if not only:
             keep = {f"{slug}.png" for slug, *_ in PLATES}
             for old in bgdir.glob("*.png"):
@@ -942,6 +1101,10 @@ def main() -> int:
     (ROOT / "zed").mkdir(exist_ok=True)
     (ROOT / "zed" / "solforge.json").write_text(zed_theme())
     print(f"Zed theme family -> {ROOT / 'zed' / 'solforge.json'}")
+    (ROOT / "obsidian").mkdir(exist_ok=True)
+    (ROOT / "obsidian" / "theme.css").write_text(obsidian_theme())
+    (ROOT / "obsidian" / "manifest.json").write_text(json.dumps(obsidian.MANIFEST, indent=2) + "\n")
+    print(f"Obsidian theme -> {ROOT / 'obsidian'}")
     (ROOT / "rex").mkdir(exist_ok=True)
     (ROOT / "rex" / "solforge.json").write_text(rex_themes())
     print(f"Rex themes -> {ROOT / 'rex' / 'solforge.json'}")

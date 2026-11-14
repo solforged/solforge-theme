@@ -49,10 +49,11 @@ them.
 
 `colors.toml`, `icons.theme`, `chromium.theme`, the backgrounds, `preview.png`,
 the omp themes in `omp/`, the app themes in `ghostty/`, `zed/`, `helix/`,
-`nushell/`, `btop/`, `nvim/` and `rex/`, and the Hermes skin in `hermes/` are all
-generated.
+`nushell/`, `btop/`, `nvim/`, `rex/` and `obsidian/`, and the Hermes skin in
+`hermes/` are all generated.
 Edit `generate.py` (palettes and app color roles), `drawings.py`
-(backgrounds) or `mask.py` (the Hermes banner art), then run:
+(backgrounds), `mask.py` (the Hermes banner art) or `obsidian.py` (Obsidian's
+type and layout), then run:
 
 ```sh
 ./generate.py
@@ -130,6 +131,26 @@ defaults write com.superlogical.rex Workspace.lightThemeID custom-84E4B7A4-558E-
 ```
 
 This replaces any other custom themes in Rex.
+
+## Obsidian
+
+`obsidian/` is an Obsidian theme with both palettes; Obsidian picks one from
+its base color scheme. It lays the site's page over the workspace. The open
+note is a sheet on the oxblood desk with registration corners, and the
+sidebars and tab bar sit on the sheet behind hairline rules. Breadcrumbs,
+folders, tags and table headers are set in mono, and callouts and settings
+groups are slips with a rubric insertion mark. Notes are set in IBM Plex
+Serif, the interface in IBM Plex Sans and code in Berkeley Mono, falling back
+to IBM Plex Mono. Install the fonts locally. Obsidian's own font settings
+still override them.
+
+```sh
+ln -s ~/src/solforge-theme/obsidian <vault>/.obsidian/themes/Solforge
+```
+
+Then pick Solforge under Settings → Appearance → Themes. The accent picker
+still works: gilt is the default accent, and a picked color replaces it
+everywhere the theme uses the accent.
 
 ## Hermes
 
